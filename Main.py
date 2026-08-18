@@ -1,5 +1,6 @@
 import requests
 import csv
+import os
 
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
@@ -119,25 +120,29 @@ def download_image(image_url, filename):
     """
     downloading books pictures
     """
+    os.makedirs("pictures", exist_ok= True)
     response = requests.get(image_url)
-    with open (filename, 'wb') as f:
+    path_file = os.path.join("pictures", filename + ".jpg")
+    with open (path_file, 'wb') as f:
            f.write(response.content)
 
 
 def main():
     categories = get_categories(base_url)
     
-    for nom_categorie, url_categorie in list(categories.items())[0:3]:
+    for nom_categorie, url_categorie in categories.items():
+        print(f"Scraping catégorie : {nom_categorie}")
         urls_produits = get_category_urls(url_categorie)
         
-
         products = []
 
         for actual_url in urls_produits:
             infos = get_product(actual_url)
+            clean_title = infos["title"].replace("/", "-").replace("#", "-")
             products.append(infos)
-            image = download_image(infos["image_url"], infos["title"]+"("+infos["upc"]+")"+".jpg")
+            image = download_image(infos["image_url"], clean_title +"("+infos["upc"]+")"+".jpg")
         csv_file(products, nom_categorie)
+    
             
 
 
@@ -146,20 +151,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # category_url = "https://books.toscrape.com/catalogue/category/books/mystery_3/page-1.html"
-    # urls = get_category_urls(category_url)
-    # products = []
-    # for url in urls:
-    #     infos = get_product
-    #     products.append(infos)
-    # csv_file(products, "Mystery")
-
-
-    # base_url = "https://books.toscrape.com/index.html"
-    # categories = get_categories(base_url)
-    # print(categories)
-
-    # urls = get_category_urls(category_url)
-    # for url in urls:
-    #     infos = get_product(url)
-    #     print(infos)
