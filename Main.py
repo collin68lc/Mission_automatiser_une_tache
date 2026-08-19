@@ -118,14 +118,14 @@ def csv_file(products, category_name):
         writer.writerows(products)
 
 
-def download_image(image_url, filename):
+def download_image(category_name, image_url, filename):
     """
     downloading books pictures
     """
     # creating a folder to store the pictures
-    os.makedirs("pictures", exist_ok= True)
+    os.makedirs(os.path.join("pictures", category_name), exist_ok= True)
     response = requests.get(image_url)
-    path_file = os.path.join("pictures", filename + ".jpg")
+    path_file = os.path.join("pictures",category_name, filename + ".jpg")
     with open (path_file, 'wb') as f:
            f.write(response.content)
 
@@ -141,9 +141,9 @@ def main():
 
         for actual_url in urls_produits:
             infos = get_product(actual_url)
-            clean_title = infos["title"].replace("/", "-").replace("#", "-") # replaces the characters that cause the programme to crash
+            clean_title = infos["title"].replace("/", "-").replace("#", "-").replace(":", "_").replace("?", "-").replace("*", "-").replace("<", "-").replace(">", "-") # replaces the characters that cause the programme to crash
             products.append(infos)
-            image = download_image(infos["image_url"], clean_title +"("+infos["upc"]+")"+".jpg") # named the picture file 
+            image = download_image(nom_categorie, infos["image_url"], clean_title +"("+infos["upc"]+")"+".jpg") # named the picture file 
         csv_file(products, nom_categorie)
     
             
