@@ -18,7 +18,8 @@ def get_product(url):
         f.write(response.text)
     soup = BeautifulSoup(response.content, "html.parser")
      
-    
+    # Retrieval of requested informations
+
     upc = soup.find('td').string
     title = soup.find('li', class_="active" ).text
     price_ttc = soup.find('p', class_='price_color').text
@@ -66,7 +67,7 @@ def get_category_urls(category_url):
         with open ('index.html', 'w', encoding='utf-8') as f:
             f.write(response.text)
         soup = BeautifulSoup(response.text, "html.parser")
-        # find all book url in one category and add to the list
+        # find all books url in one category and add to the list
         book = soup.find("ol", class_='row').find_all("h3")
         for links in book:
             urls = links.a['href']
@@ -94,14 +95,14 @@ def get_categories(base_url):
        f.write(response.text)
     soup = BeautifulSoup(response.content, "html.parser")
 
-     
+    # Find the URL of a categorie
     liens = soup.find("ul", class_="nav nav-list").find_all("a")
     for lien in liens[1:]:   
         category_name = lien.text.strip()          # le texte affiché du lien, nettoyé des espaces
-        category_href = lien["href"]                # le href relatif
-        category_url = urljoin(base_url, category_href)   # transformé en absolu
+        category_href = lien["href"]                # href is a relative url
+        category_url = urljoin(base_url, category_href)   # urljoin transform relative url in a absolute url
         
-        categories_dict[category_name] = category_url    # on ajoute la paire au dictionnaire
+        categories_dict[category_name] = category_url    # add the url in the dictionnary
 
     return categories_dict
 
@@ -110,6 +111,7 @@ def csv_file(products, category_name):
     """
     Save informations of books in a list 
     """
+    # creatiing a csv file by category
     with open("products informations"+category_name+".csv", "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=products[0].keys())
         writer.writeheader()
@@ -120,6 +122,7 @@ def download_image(image_url, filename):
     """
     downloading books pictures
     """
+    # creating a folder to store the pictures
     os.makedirs("pictures", exist_ok= True)
     response = requests.get(image_url)
     path_file = os.path.join("pictures", filename + ".jpg")
@@ -138,9 +141,9 @@ def main():
 
         for actual_url in urls_produits:
             infos = get_product(actual_url)
-            clean_title = infos["title"].replace("/", "-").replace("#", "-")
+            clean_title = infos["title"].replace("/", "-").replace("#", "-") # replaces the characters that cause the programme to crash
             products.append(infos)
-            image = download_image(infos["image_url"], clean_title +"("+infos["upc"]+")"+".jpg")
+            image = download_image(infos["image_url"], clean_title +"("+infos["upc"]+")"+".jpg") # named the picture file 
         csv_file(products, nom_categorie)
     
             
