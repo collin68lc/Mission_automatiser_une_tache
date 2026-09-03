@@ -1,12 +1,25 @@
-Pour executer le programme il faut d'abord créer l'environement virtuel en tapant les lignes suivantes dans le terminal (vérifiez que vous êtes dans le dossier où se trouve le programme):
-python -m venv env ou python3 -m venv env 
+# Récupération des données du site books.toscrape.com
 
-Une fois l'environnement créé il faut taper la ligne de commande suivante pour l'activer:
-source env/bin/activate si vous travaillez avec Linux ou Mac
-env\Scripts\activate.bat si vous êtes sous Windows
+## Déscription
+Un script Python qui parcourt l'intégralité du site books.toscrape.com, extrait les informations de chaque livre par catégorie, les enregistre dans des fichiers CSV et télécharge les images de couverture correspondantes.
 
-Si l'environnement est bine activé vous verrez apparaitre (env) au début ou à la fin de la ligne de commande.
-
-Une fois l'environnement installer il faudra installer les différents package se trouvant dans le fichier requirements.txt à l'aide de la fonction pip install ou pip install -r requirements.txt qui installera automatiquement tous les package présent dans le fichier requirements.txt
-
-Lorsque les package sont installé vous pouvez lancer le programme
+## Prérequis
+    • Python 3.8 ou supérieur 
+    • Les bibliothèques suivantes : 
+        ◦ requests 
+        ◦ beautifulsoup4 
+## Installation
+    1. Cloner ou télécharger le projet. 
+    2. Installer les dépendances : 
+bash
+pip install requests beautifulsoup4
+## Utilisation
+Lancer simplement le script depuis un terminal :
+bash
+python nom_du_script.py
+Le script va :
+    1. Récupérer la liste des catégories du site. 
+    2. Parcourir chaque catégorie et collecter les URLs de tous les livres. 
+    3. Extraire les informations de chaque livre. 
+    4. Générer un fichier CSV par catégorie. 
+    5. Télécharger les images de couverture correspondantes. 
